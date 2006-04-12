@@ -1,0 +1,14 @@
+
+author: Ricardo Signes <rjbs@cpan.org>
+distribution_type: module
+generated_by: Module::Install version 0.60
+license: perl
+name: Package-Generator
+no_index: 
+  directory: 
+    - inc
+    - t
+requires: 
+  Scalar::Util: 0
+  Test::More: 0
+version: 0.01
