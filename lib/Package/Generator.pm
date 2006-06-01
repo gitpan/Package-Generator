@@ -12,13 +12,13 @@ Package::Generator - generate new packages quickly and easily
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
- $Id: /my/cs/projects/pkg-gen/trunk/lib/Package/Generator.pm 20919 2006-04-11T23:42:50.553841Z rjbs  $
+ $Id: /my/cs/projects/pkg-gen/trunk/lib/Package/Generator.pm 4470 2006-04-15T16:52:21.725214Z rjbs  $
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -66,13 +66,23 @@ cause C<$ISA> to be assigned;  that wouldn't be very helpful.)
 =cut
 
 my $i = 0;
+my $unique_part = sub { $i++ };
+my $make_unique = sub { sprintf "%s::%u", $_[0], $_[1]->() };
+
 sub new_package {
   my ($self, $arg) = @_;
   $arg->{base} ||= 'Package::Generator::__GENERATED__';
-  $arg->{make_unique} ||= sub { sprintf "%s::%u", $arg->{base}, $i++ };
+  $arg->{unique_part} ||= $unique_part;
+  $arg->{make_unique} ||= $make_unique;
+  $arg->{max_tries} ||= 1;
 
-  my $package = $arg->{make_unique}->($arg->{base});
-  # XXX: ensure that this name isn't yet defined in symbol tables?
+  my $package;
+  for (my $i = 1; 1; $i++) {
+    $package = $arg->{make_unique}->($arg->{base}, $arg->{unique_part});
+    last unless $self->package_exists($package); 
+    Carp::croak "couldn't generate a pristene package under $arg->{base}"
+      if $i >= $arg->{max_tries};
+  }
 
   my @data = $arg->{data} ? @{ $arg->{data} } : ();
 
@@ -82,7 +92,14 @@ sub new_package {
     ($arg->{version} ? (VERSION => $arg->{version}) : ()),
   );
 
-  $self->assign_symbols($package, \@data);
+  if (@data) {
+    $self->assign_symbols($package, \@data);
+  } else {
+    # This ensures that even without symbols, the package is created so that it
+    # will not be detected as pristene by package_exists.  Without this line of
+    # code, non-unique tests will fail. -- rjbs, 2006-04-14
+    { no strict qw(refs); no warnings qw(void); %{$package . '::'}; }
+  }
 
   return $package;
 }
@@ -111,6 +128,38 @@ sub assign_symbols {
     }
   }
 }
+
+=head2 package_exists
+
+  ... if Package::Generator->package_exists($package);
+
+This method returns true if something has already created a symbol table for
+the named package.  This is equivalent to:
+
+  ... if defined *{$package . '::'};
+
+It's just a little less voodoo-y.
+
+=cut
+
+sub package_exists {
+  my ($self, $package) = @_;
+
+  return defined *{$package . '::'};
+}
+
+# My first attempt!  How silly I felt when I threw in some Data::Dumper and saw
+# that the above would suffice. -- rjbs, 2006-04-14
+#
+#  my @parts = split /::/, $package;
+#  
+#  my $current_pkg = 'main';
+#  for (@parts) {
+#    my $current_stash = do { no strict 'refs'; \%{$current_pkg . "::"} };
+#    return unless exists $current_stash->{$_ . "::"};
+#    $current_pkg .= "::$_"
+#  }
+#  return 1;
 
 =head1 AUTHOR
 
