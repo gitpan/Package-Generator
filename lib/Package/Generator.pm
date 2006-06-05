@@ -12,13 +12,13 @@ Package::Generator - generate new packages quickly and easily
 
 =head1 VERSION
 
-version 0.02
+version 0.100
 
- $Id: /my/cs/projects/pkg-gen/trunk/lib/Package/Generator.pm 4470 2006-04-15T16:52:21.725214Z rjbs  $
+ $Id: /my/cs/projects/pkg-gen/trunk/lib/Package/Generator.pm 22111 2006-06-05T18:39:59.581255Z rjbs  $
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.100';
 
 =head1 SYNOPSIS
 
