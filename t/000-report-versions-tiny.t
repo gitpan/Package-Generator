@@ -55,7 +55,6 @@ eval { $v .= pmver('File::Temp','any version') };
 eval { $v .= pmver('Scalar::Util','any version') };
 eval { $v .= pmver('Symbol','any version') };
 eval { $v .= pmver('Test::More','0.96') };
-eval { $v .= pmver('Test::Perl::Critic','any version') };
 eval { $v .= pmver('Test::Pod','1.41') };
 eval { $v .= pmver('strict','any version') };
 eval { $v .= pmver('version','0.9901') };

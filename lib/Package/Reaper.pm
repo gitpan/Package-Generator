@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Package::Reaper;
 {
-  $Package::Reaper::VERSION = '0.104';
+  $Package::Reaper::VERSION = '1.105';
 }
 use 5.008;
 # ABSTRACT: pseudo-garbage-collection for packages
@@ -62,7 +62,7 @@ Package::Reaper - pseudo-garbage-collection for packages
 
 =head1 VERSION
 
-version 0.104
+version 1.105
 
 =head1 SYNOPSIS
 

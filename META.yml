@@ -6,7 +6,6 @@ build_requires:
   File::Find: 0
   File::Temp: 0
   Test::More: 0.96
-  Test::Perl::Critic: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
@@ -27,7 +26,7 @@ resources:
   bugtracker: https://github.com/rjbs/package-generator/issues
   homepage: https://github.com/rjbs/package-generator
   repository: https://github.com/rjbs/package-generator.git
-version: 0.104
+version: 1.105
 x_Dist_Zilla:
   perl:
     version: 5.019001

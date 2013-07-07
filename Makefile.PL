@@ -29,10 +29,9 @@ my %WriteMakefileArgs = (
   "TEST_REQUIRES" => {
     "File::Find" => 0,
     "File::Temp" => 0,
-    "Test::More" => "0.96",
-    "Test::Perl::Critic" => 0
+    "Test::More" => "0.96"
   },
-  "VERSION" => "0.104",
+  "VERSION" => "1.105",
   "test" => {
     "TESTS" => "t/*.t"
   }

@@ -13,10 +13,7 @@ t/00-load.t
 t/000-report-versions-tiny.t
 t/basic.t
 t/not-unique.t
-t/perl-critic.t
 t/pkg-exists.t
-t/pod-coverage.t
-t/pod.t
 t/reaper.t
 xt/release/changes_has_content.t
 xt/release/pod-syntax.t
