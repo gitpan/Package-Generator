@@ -1,10 +1,60 @@
-package Package::Reaper;
-use 5.008;
-use warnings;
 use strict;
+use warnings;
+package Package::Reaper;
+{
+  $Package::Reaper::VERSION = '0.104';
+}
+use 5.008;
+# ABSTRACT: pseudo-garbage-collection for packages
 
 use Carp ();
 use Symbol ();
+
+
+sub new {
+  my ($class, $package) = @_;
+
+  # Do I care about checking $package with _CLASS and/or exists_package?
+  # Probably not, for now. -- rjbs, 2006-06-05
+  my $self = [ $package, 1 ];
+  bless $self => $class;
+}
+
+
+sub package {
+  my $self = shift;
+  Carp::croak "a reaper's package may not be altered" if @_;
+  return $self->[0];
+}
+
+
+sub is_armed {
+  my $self = shift;
+  return $self->[1] == 1;
+}
+
+
+sub disarm { $_[0]->[1] = 0 }
+
+
+sub arm { $_[0]->[1] = 1 }
+
+sub DESTROY {
+  my ($self) = @_;
+
+  return unless $self->is_armed;
+
+  my $package = $self->package;
+
+  Symbol::delete_package($package);
+}
+
+"You might be a king or a little street sweeper, but sooner or later you dance
+with Package:Reaper.";
+
+__END__
+
+=pod
 
 =head1 NAME
 
@@ -12,11 +62,7 @@ Package::Reaper - pseudo-garbage-collection for packages
 
 =head1 VERSION
 
-version 0.103
-
-=cut
-
-our $VERSION = '0.103';
+version 0.104
 
 =head1 SYNOPSIS
 
@@ -46,30 +92,11 @@ This returns the newly generated package reaper.  When the reaper goes out of
 scope and is garbage collected, it will delete the symbol table entry for the
 package.
 
-=cut
-
-sub new {
-  my ($class, $package) = @_;
-
-  # Do I care about checking $package with _CLASS and/or exists_package?
-  # Probably not, for now. -- rjbs, 2006-06-05
-  my $self = [ $package, 1 ];
-  bless $self => $class;
-}
-
 =head2 package
 
   my $package = $reaper->package;
 
 This method returns the package which will be reaped.
-
-=cut
-
-sub package {
-  my $self = shift;
-  Carp::croak "a reaper's package may not be altered" if @_;
-  return $self->[0];
-}
 
 =head2 is_armed
 
@@ -79,23 +106,12 @@ This method returns true if the reaper is armed and false otherwise.  Reapers
 always start out armed.  A disarmed reaper will not actually reap when
 destroyed.
 
-=cut
-
-sub is_armed {
-  my $self = shift;
-  return $self->[1] == 1;
-}
-
 =head2 disarm
 
   $reaper->disarm;
 
 This method disarms the reaper, so that it will not reap the package when it is
 destoryed.
-
-=cut
-
-sub disarm { $_[0]->[1] = 0 }
 
 =head2 arm
 
@@ -104,39 +120,15 @@ sub disarm { $_[0]->[1] = 0 }
 This method arms the reaper, so that it will reap its package when it is
 destroyed.  By default, new reapers are armed.
 
-=cut
-
-sub arm { $_[0]->[1] = 1 }
-
-sub DESTROY {
-  my ($self) = @_;
-
-  return unless $self->is_armed;
-
-  my $package = $self->package;
-
-  Symbol::delete_package($package);
-}
-
 =head1 AUTHOR
 
-Ricardo SIGNES, C<< <rjbs@cpan.org> >>
+Ricardo SIGNES <rjbs@cpan.org>
 
-=head1 BUGS
+=head1 COPYRIGHT AND LICENSE
 
-Please report any bugs or feature requests to
-C<bug-package-generator@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.  I will be notified, and then you'll automatically be
-notified of progress on your bug as I make changes.
+This software is copyright (c) 2005 by Ricardo SIGNES.
 
-=head1 COPYRIGHT
-
-Copyright 2006 Ricardo Signes, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-"You might be a king or a little street sweeper, but sooner or later you dance
-with Package:Reaper.";
