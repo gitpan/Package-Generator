@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Package::Generator;
 {
-  $Package::Generator::VERSION = '1.105';
+  $Package::Generator::VERSION = '1.106';
 }
 use 5.008;
 # ABSTRACT: generate new packages quickly and easily
@@ -100,13 +100,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Package::Generator - generate new packages quickly and easily
 
 =head1 VERSION
 
-version 1.105
+version 1.106
 
 =head1 SYNOPSIS
 

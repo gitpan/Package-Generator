@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Package::Reaper;
 {
-  $Package::Reaper::VERSION = '1.105';
+  $Package::Reaper::VERSION = '1.106';
 }
 use 5.008;
 # ABSTRACT: pseudo-garbage-collection for packages
@@ -56,13 +56,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Package::Reaper - pseudo-garbage-collection for packages
 
 =head1 VERSION
 
-version 1.105
+version 1.106
 
 =head1 SYNOPSIS
 
@@ -111,7 +113,7 @@ destroyed.
   $reaper->disarm;
 
 This method disarms the reaper, so that it will not reap the package when it is
-destoryed.
+destroyed.
 
 =head2 arm
 
